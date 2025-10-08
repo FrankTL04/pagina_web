@@ -35,82 +35,39 @@ library(agricolae)
 ```
 
 
-## DCA
+## DISEÑO EXPERIMENTAL DCA
 
-factor = dosis de fertilizacion nitrogenada (kg/ha)
-0 testigo
-50
-100
-
-x <- 0
-y <- 50 
-z <- 100
-
+Factor → dosis de fertilización nitrogenada (kg/ha) 0 ~ testigo 50 100 Diseño: DCA Repeticiones: 5 UE → 3 dosis x 5 rep = 15
 
 ```{r}
-# Definir tratamientos y repeticiones
-trat <- c("0", "50", "100")
-reps <- 5
+# Definición de los tratamientos (factor: dosis de fertilización nitrogenada)
+tratamientos <- c("0", "50", "100")
 
-# Crear el diseño completamente al azar (DCA)
-diseño <- design.crd(trat, r = reps, seed = 123, serie = 2)
-
-# Ver el diseño (aleatorización)
-diseño$book
-
-# Agregar columna con datos de rendimiento simulados
-set.seed(123)
-rendimiento <- c(
-  rnorm(5, mean = 2.5, sd = 0.2),  # 0 kg
-  rnorm(5, mean = 3.0, sd = 0.2),  # 50 kg
-  rnorm(5, mean = 3.8, sd = 0.2)   # 100 kg
+# Diseño completamente al azar (DCA) con 5 repeticiones
+diseño <- design.crd(
+  trt = tratamientos,   # tratamientos
+  r = 5,                # número de repeticiones
+  seed = 123,           # semilla para reproducibilidad
+  serie = 2             # numeración de las unidades experimentales
 )
 
-# Añadirlos al diseño
-diseño$book$rendimiento <- rendimiento
-datos <- diseño$book
-datos
-
+# Visualización del diseño generado
+print(diseño)
 ```
 
 
 
-# DISEÑO EXPERIMENTAL DBCA
+
+# DISEÑO EXPERIMENTAL DBCA FACTORIAL
+
+Factor 1 → dosis de fertilización nitrogenada (Kg/ha) Factor 2 → cultivares papa peruanita canchan Diseño: DBCA Repeticiones: 4 UE → 3 dosis x 2 cultivos x 4 rep = 24
 
 ```{r}
-# Define the factors and design parameters
-fert_levels <- c(0, 150, 300)  # Fertilization levels in kg/ha
-cultivars <- c("Peruanita", "Canchan")
-replications <- 4
-seed_value <- 123  # For reproducible results
-
-# Create treatment combinations
-treatments <- expand.grid(
-  Fertilizacion = fert_levels,
-  Cultivar = cultivars
-)
-print("Treatment Combinations:")
-print(treatments)
-
-# Generate the RCBD design
-design <- design.rcbd(
-  trt = treatments, 
-  r = replications, 
-  seed = seed_value,
-  serie = 1
-)
-
-# Display design parameters
-print(design$parameters)
-
-# View the experimental layout
-cat("\nExperimental Layout:\n")
-print(design$book)
-
-# Optional: Save the design to a CSV file
-write.csv(design$book, "diseno_papa_dbca.csv", row.names = FALSE)
+trt<-c(3,2) # factorial 3x2
+outdesign <-design.ab(trt, r=3, serie=2)
+book<-outdesign$book
+book
 ```
-
 
 
 
